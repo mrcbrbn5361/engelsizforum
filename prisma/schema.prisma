@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  username  String?  @unique
+  avatar    String?
+  bio       String?
+  role      UserRole @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  threads  Thread[]
+  posts    Post[]
+  sessions Session[]
+  likes    PostLike[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  slug        String   @unique
+  icon        String?
+  color       String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  threads Thread[]
+}
+
+model Thread {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String
+  content     String
+  isSticky    Boolean     @default(false)
+  isLocked    Boolean     @default(false)
+  isAnswered  Boolean     @default(false)
+  viewCount   Int         @default(0)
+  replyCount  Int         @default(0)
+  categoryId  String
+  authorId    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  lastPostAt  DateTime?
+
+  // Relations
+  category    Category    @relation(fields: [categoryId], references: [id])
+  author      User        @relation(fields: [authorId], references: [id])
+  posts       Post[]
+  tags        ThreadTag[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  threadId  String
+  parentId  String?
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+  parent    Post?    @relation("PostReplies", fields: [parentId], references: [id])
+  replies   Post[]   @relation("PostReplies")
+  likes     PostLike[]
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  threads ThreadTag[]
+}
+
+model ThreadTag {
+  id       String @id @default(cuid())
+  threadId String
+  tagId    String
+
+  thread Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, tagId])
+}
+
+model PostLike {
+  id      String   @id @default(cuid())
+  postId  String
+  userId  String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}

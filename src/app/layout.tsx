@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Atkinson_Hyperlegible } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { AccessibilityPanel } from "@/components/layout/AccessibilityPanel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +14,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const hyperlegible = Atkinson_Hyperlegible({
+  variable: "--font-accessibility",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -42,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${hyperlegible.variable} antialiased bg-background text-foreground`}
       >
         <div className="min-h-screen flex flex-col">
           <Header />
@@ -51,6 +58,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
+        <AccessibilityPanel />
         <Toaster />
       </body>
     </html>

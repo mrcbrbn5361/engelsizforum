@@ -11,6 +11,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
+    "db:seed": "prisma db seed",
     "deploy": "echo 'Deploying to https://w08cb7n06hb1-deploy.space.z.ai'"
   },
   "dependencies": {
@@ -97,5 +98,9 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
+  }
+  ,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

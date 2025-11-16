@@ -76,6 +76,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --accessibility-font-scale: 1;
+}
+
+html {
+  font-size: calc(16px * var(--accessibility-font-scale));
+  scroll-behavior: smooth;
 }
 
 .dark {
@@ -112,11 +118,42 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+html[data-high-contrast="true"] {
+  --background: #050816;
+  --foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #e2e8f0;
+  --primary: #22d3ee;
+  --primary-foreground: #04121f;
+  --border: rgba(255, 255, 255, 0.35);
+  --muted-foreground: #cbd5f5;
+}
+
+html[data-dyslexic="true"] body {
+  font-family: var(--font-accessibility), var(--font-geist-sans), system-ui;
+}
+
+html[data-focus-highlight="true"] *:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 3px;
+  transition: outline-offset 0.1s ease;
+}
+
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont;
   }
 }

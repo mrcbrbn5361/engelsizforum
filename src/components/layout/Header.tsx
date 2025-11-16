@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Menu, User, LogIn, LogOut, Bell } from "lucide-react"
+import { Bell, HeartHandshake, LogIn, LogOut, MessageCircle, Search, User } from "lucide-react"
+import { Logo } from "@/components/layout/Logo"
 
 interface HeaderProps {
   user?: {
@@ -16,105 +16,98 @@ interface HeaderProps {
 }
 
 export function Header({ user }: HeaderProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navItems = [
+    { href: "/", label: "Ana Sayfa" },
+    { href: "/categories", label: "Kategoriler" },
+    { href: "/#ozellikler", label: "Özellikler" },
+    { href: "/#destek", label: "Destek Merkezi" },
+  ]
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="container mx-auto px-4">
-        {/* Header Top */}
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">EF</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">EngelsizForum</span>
-            </Link>
-          </div>
-
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Arama..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+        <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-1 items-center gap-6">
+            <Logo />
+            <div className="hidden flex-1 md:block">
+              <label className="relative block" aria-label="Forum içerisinde ara">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="search"
+                  placeholder="Konularda, etiketlerde veya uzmanlarda ara"
+                  className="w-full rounded-2xl border border-slate-200 bg-white/70 py-2 pl-9 pr-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                />
+              </label>
             </div>
           </div>
 
-          {/* User Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" className="gap-2 border-blue-200 text-blue-600" asChild>
+              <Link href="tel:+908505550000">
+                <HeartHandshake className="h-4 w-4" />
+                0850 555 00 00
+              </Link>
+            </Button>
             {user ? (
-              <>
-                <Button variant="ghost" size="sm">
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" className="rounded-full" asChild>
                   <Link href="/notifications">
                     <Bell className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-9 w-9">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback>
-                    {user.name?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
+                  <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" size="sm" asChild>
                   <Link href="/profile">
-                    <User className="h-4 w-4" />
+                    <User className="mr-2 h-4 w-4" />
+                    Profil
                   </Link>
                 </Button>
-                <Button variant="outline" size="sm">
-                  <LogOut className="h-4 w-4 mr-2" />
+                <Button variant="default" size="sm" className="bg-slate-900 text-white">
+                  <LogOut className="mr-2 h-4 w-4" />
                   Çıkış
                 </Button>
-              </>
+              </div>
             ) : (
-              <>
+              <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/login">
-                    <LogIn className="h-4 w-4 mr-2" />
+                    <LogIn className="mr-2 h-4 w-4" />
                     Giriş
                   </Link>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="default" size="sm" className="bg-blue-600 text-white" asChild>
                   <Link href="/register">Kayıt Ol</Link>
                 </Button>
-              </>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="border-t border-gray-200">
-          <div className="flex items-center justify-between h-12">
-            <div className="flex items-center space-x-1">
-              <Link 
-                href="/" 
-                className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border-b-2 border-blue-600"
+        <nav className="flex flex-col gap-3 border-t border-slate-100 py-3 text-sm font-medium text-slate-600 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-full px-4 py-2 transition hover:bg-blue-50 hover:text-blue-600"
               >
-                Ana Sayfa
+                {item.label}
               </Link>
-              <Link 
-                href="/categories" 
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-              >
-                Kategoriler
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="gap-2" asChild>
+              <Link href="/new-thread">
+                <MessageCircle className="h-4 w-4" />
+                Yeni Konu Aç
               </Link>
-              <Link 
-                href="/latest" 
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-              >
-                Son Konular
-              </Link>
-              <Link 
-                href="/popular" 
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-              >
-                Popüler
-              </Link>
-            </div>
+            </Button>
+            <Button variant="ghost" className="text-slate-500" asChild>
+              <Link href="/search">Gelişmiş Arama</Link>
+            </Button>
           </div>
         </nav>
       </div>

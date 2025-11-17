@@ -1,13 +1,12 @@
 // server.ts - Next.js Standalone + Socket.IO
 import { setupSocket } from '@/lib/socket';
+import { runtimeConfig, socketUrl } from '@/lib/runtime-config';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
-const currentPort = 3000;
-const hostname = '0.0.0.0';
-const deploymentUrl = 'https://w08cb7n06hb1-deploy.space.z.ai';
+const { host: hostname, port: currentPort, appUrl: deploymentUrl } = runtimeConfig;
 
 // Custom server with Socket.IO integration
 async function createCustomServer() {
@@ -47,7 +46,7 @@ async function createCustomServer() {
     server.listen(currentPort, hostname, () => {
       console.log(`> Ready on http://${hostname}:${currentPort}`);
       console.log(`> Production URL: ${deploymentUrl}`);
-      console.log(`> Socket.IO server running at ws://${hostname}:${currentPort}/api/socketio`);
+      console.log(`> Socket.IO server running at ${socketUrl}`);
     });
 
   } catch (err) {

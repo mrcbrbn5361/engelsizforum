@@ -77,7 +77,13 @@ npm run build
 npm start
 ```
 
-Uygulamanın çalıştığını görmek için [https://w08cb7n06hb1-deploy.space.z.ai](https://w08cb7n06hb1-deploy.space.z.ai) adresini ziyaret edin.
+Uygulamanın çalıştığını görmek için [http://localhost:3000](http://localhost:3000) adresini ziyaret edin. Geliştirme sunucusu başladığında terminalde aşağıdaki gibi yerel bilgiler görünecektir:
+
+```
+> Ready on http://0.0.0.0:3000
+> Production URL: http://localhost:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+```
 
 > Yeni geliştirilen erişilebilir arayüz için en iyi deneyimi elde etmek adına tarayıcınızda yüksek kontrast ve font ölçeklendirme ayarlarını denemeyi unutmayın.
 
@@ -141,7 +147,9 @@ Bu platform modern web geliştirme için kapsamlı bir araç seti içerir:
 
 ## 🚀 Deployment
 
-Bu platform zaten [https://w08cb7n06hb1-deploy.space.z.ai](https://w08cb7n06hb1-deploy.space.z.ai) adresinde yayınlanmıştır.
+- Varsayılan olarak uygulama `http://localhost:3000` adresinde çalışır.
+- Farklı bir domain veya port kullanmak için `.env` dosyasındaki `HOST`, `PORT`, `APP_BASE_URL` ve `NEXT_PUBLIC_APP_URL` değişkenlerini güncellemeniz yeterlidir.
+- Yapı sonrası `npm start` komutu `server.ts` dosyasını kullanarak aynı yerel bilgileri konsola yazdırır.
 
 ## 📋 Forum Özellikleri
 

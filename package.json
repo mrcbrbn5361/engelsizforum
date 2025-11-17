@@ -12,7 +12,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
-    "deploy": "echo 'Deploying to https://w08cb7n06hb1-deploy.space.z.ai'",
+    "deploy": "echo 'Local deploy: npm run build && npm start (http://localhost:3000)'",
     "postinstall": "prisma generate"
   },
   "dependencies": {

@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AccessibilityPanel } from "@/components/layout/AccessibilityPanel";
 import { AssistiveHUD } from "@/components/layout/AssistiveHUD";
 import { getCurrentUser } from "@/lib/auth/session";
+import { runtimeConfig } from "@/lib/runtime-config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,15 +25,18 @@ const hyperlegible = Atkinson_Hyperlegible({
   weight: ["400", "700"],
 });
 
+const { appUrl } = runtimeConfig;
+
 export const metadata: Metadata = {
   title: "EngelsizForum - Engelli Hakları Forumu",
   description: "Engelli haklarıyla ilgili yasal düzenlemeler ve sorunların çözümüne yönelik mücadele eden bir topluluk platformu.",
   keywords: ["engelli", "hakları", "forum", "yasal düzenlemeler", "mücadele", "topluluk"],
   authors: [{ name: "EngelsizForum Team" }],
+  metadataBase: new URL(appUrl),
   openGraph: {
     title: "EngelsizForum",
     description: "Engelli hakları forumu ve topluluk platformu",
-    url: "https://w08cb7n06hb1-deploy.space.z.ai",
+    url: appUrl,
     siteName: "EngelsizForum",
     type: "website",
   },

@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
-    "deploy": "echo 'Deploying to https://w08cb7n06hb1-deploy.space.z.ai'"
+    "deploy": "echo 'Deploying to https://w08cb7n06hb1-deploy.space.z.ai'",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

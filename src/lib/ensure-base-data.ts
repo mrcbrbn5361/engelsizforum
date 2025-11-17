@@ -116,7 +116,6 @@ async function seedBaseData() {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __baseDataSeedPromise: Promise<void> | null | undefined
 }
 

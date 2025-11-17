@@ -11,35 +11,37 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
+  const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
+    setSuccess("")
 
     try {
-      // TODO: Implement actual authentication logic
-      // For now, just simulate a successful login
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // In a real app, you would:
-      // 1. Validate the form data
-      // 2. Call your authentication API
-      // 3. Set up user session
-      // 4. Redirect to dashboard or homepage
-      
-      console.log("Login attempt:", { email, password })
-      
-      // Simulate successful login
-      alert("Giriş başarılı! Gerçek uygulamada burada yönlendirme yapılacak.")
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ identifier, password }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.message ?? "Giriş başarısız")
+        return
+      }
+
+      setSuccess("Giriş başarılı! Ana sayfaya yönlendiriliyorsunuz...")
       router.push("/")
-      
+      router.refresh()
     } catch (err) {
       setError("Giriş başarısız. Lütfen e-posta ve şifrenizi kontrol edin.")
     } finally {
@@ -72,16 +74,22 @@ export default function LoginPage() {
                 </Alert>
               )}
 
+              {success && (
+                <Alert className="border-green-200 bg-green-50">
+                  <AlertDescription className="text-green-800">{success}</AlertDescription>
+                </Alert>
+              )}
+
               <div className="space-y-2">
-                <Label htmlFor="email">E-posta Adresi</Label>
+                <Label htmlFor="identifier">E-posta veya Kullanıcı Adı</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="ornek@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="identifier"
+                    type="text"
+                    placeholder="ornek@email.com veya kullaniciadi"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     className="pl-10"
                     required
                   />

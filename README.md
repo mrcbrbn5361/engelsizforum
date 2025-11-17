@@ -60,6 +60,13 @@ Bu platform aşağıdaki modern teknolojilerle oluşturulmuştur:
 # Bağımlılıkları yükle
 npm install
 
+# .env dosyasını oluştur (örn. .env.example dosyasını kopyalayarak)
+cp .env.example .env
+
+# Veritabanı şemasını ve örnek verileri yükle
+npm run db:push
+npm run db:seed
+
 # Geliştirme sunucusunu başlat
 npm run dev
 
@@ -70,7 +77,15 @@ npm run build
 npm start
 ```
 
-Uygulamanın çalıştığını görmek için [https://w08cb7n06hb1-deploy.space.z.ai](https://w08cb7n06hb1-deploy.space.z.ai) adresini ziyaret edin.
+Uygulamanın çalıştığını görmek için [http://localhost:3000](http://localhost:3000) adresini ziyaret edin. Geliştirme sunucusu başladığında terminalde aşağıdaki gibi yerel bilgiler görünecektir:
+
+```
+> Ready on http://0.0.0.0:3000
+> Production URL: http://localhost:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+```
+
+> Yeni geliştirilen erişilebilir arayüz için en iyi deneyimi elde etmek adına tarayıcınızda yüksek kontrast ve font ölçeklendirme ayarlarını denemeyi unutmayın.
 
 ## 📁 Proje Yapısı
 
@@ -93,6 +108,12 @@ src/
 
 Bu platform modern web geliştirme için kapsamlı bir araç seti içerir:
 
+### 🌈 Engelsiz Deneyim Katmanları
+- **Erişilebilirlik Paneli**: Yazı boyutu, yüksek kontrast, disleksi dostu font ve hareket azaltma seçenekleri kullanıcı başına kaydedilir.
+- **Engelsiz Destek Hattı**: Ana sayfadan 7/24 arama ve işaret dili çağrı merkezi bağlantıları.
+- **Kaynak Havuzu**: Prisma veritabanında saklanan erişilebilirlik kaynakları `GET /api/accessibility/resources` ve `GET /api/forum/overview` uç noktalarıyla sunulur.
+- **Duyarlı Logo ve Tema**: Yeni EngelsizForum logosu ile hero bölümü, kartlar ve istatistikler yüksek kontrastlı olarak güncellendi.
+
 ### 🧩 UI Bileşenleri (shadcn/ui)
 - **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
 - **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
@@ -114,6 +135,7 @@ Bu platform modern web geliştirme için kapsamlı bir araç seti içerir:
 ### 🔐 Backend Entegrasyonu
 - **Authentication**: Kullanıcı giriş/çıkış akışları
 - **Database**: Type-safe veritabanı işlemleri ile Prisma
+- **Seed Script**: `npm run db:seed` komutu; kategoriler, uzman kullanıcılar, forum başlıkları ve erişilebilirlik kaynakları ile veritabanını doldurur.
 - **API Client**: HTTP istekleri ile Axios + TanStack Query
 - **State Management**: Basit ve ölçeklenebilir ile Zustand
 
@@ -125,7 +147,9 @@ Bu platform modern web geliştirme için kapsamlı bir araç seti içerir:
 
 ## 🚀 Deployment
 
-Bu platform zaten [https://w08cb7n06hb1-deploy.space.z.ai](https://w08cb7n06hb1-deploy.space.z.ai) adresinde yayınlanmıştır.
+- Varsayılan olarak uygulama `http://localhost:3000` adresinde çalışır.
+- Farklı bir domain veya port kullanmak için `.env` dosyasındaki `HOST`, `PORT`, `APP_BASE_URL` ve `NEXT_PUBLIC_APP_URL` değişkenlerini güncellemeniz yeterlidir.
+- Yapı sonrası `npm start` komutu `server.ts` dosyasını kullanarak aynı yerel bilgileri konsola yazdırır.
 
 ## 📋 Forum Özellikleri
 
@@ -135,6 +159,8 @@ Bu platform zaten [https://w08cb7n06hb1-deploy.space.z.ai](https://w08cb7n06hb1-
 - **Kullanıcı Yönetimi**: Kayıt, giriş, profil yönetimi
 - **Moderasyon**: Moderatör sistemi ve kilitli/sabitli konular
 - **Etiket Sistemi**: Konuları kategorize etme ve bulma
+- **Destek Merkezi**: İşaret dili hattı, haritalar ve psikolojik destek bağlantıları.
+- **Görsel Rahatlık**: Yüksek kontrast ve disleksi dostu font ayarları tüm sayfalarda uygulanır.
 
 ## 🎯 Ana Sayfa Özellikleri
 

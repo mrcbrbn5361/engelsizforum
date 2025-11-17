@@ -16,7 +16,22 @@ type BaseUser = {
   avatar?: string
   bio: string
   role?: UserRole
+  password: string
 }
+
+type BaseAccessibilityProfile = {
+  userEmail: string
+  disabilityFocus?: string
+  assistiveTech?: string[]
+  communicationPreference?: string
+  visualSupport?: boolean
+  hearingSupport?: boolean
+  cognitiveSupport?: boolean
+  mobilitySupport?: boolean
+  communicationSupport?: boolean
+}
+
+const DEFAULT_MEMBER_PASSWORD = "Engelsiz123!"
 
 type BaseThread = {
   title: string
@@ -109,6 +124,7 @@ export const baseUsers: BaseUser[] = [
     bio: "Engelli hakları alanında 10+ yıl deneyimli avukat.",
     avatar: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39",
     role: UserRole.MODERATOR,
+    password: DEFAULT_MEMBER_PASSWORD,
   },
   {
     name: "Dr. Ayşe Kaya",
@@ -116,24 +132,72 @@ export const baseUsers: BaseUser[] = [
     username: "drayse",
     bio: "Fizik tedavi ve rehabilitasyon uzmanı.",
     avatar: "https://images.unsplash.com/photo-1544723795-432537f475ba",
+    password: DEFAULT_MEMBER_PASSWORD,
   },
   {
     name: "Zeynep Demir",
     email: "zeynep@engelsizforum.org",
     username: "zeynepedu",
     bio: "Görme engelliler için öğretmen ve içerik tasarımcısı.",
+    password: DEFAULT_MEMBER_PASSWORD,
   },
   {
     name: "Burak Özkan",
     email: "burak@engelsizforum.org",
     username: "buraktech",
     bio: "Erişilebilirlik üzerine çalışan yazılım geliştiricisi.",
+    password: DEFAULT_MEMBER_PASSWORD,
   },
   {
     name: "Elif Arslan",
     email: "elif@engelsizforum.org",
     username: "elifdestek",
     bio: "Sosyal hizmetler uzmanı.",
+    password: DEFAULT_MEMBER_PASSWORD,
+  },
+]
+
+export const baseAccessibilityProfiles: BaseAccessibilityProfile[] = [
+  {
+    userEmail: "mehmet@engelsizforum.org",
+    disabilityFocus: "Görme ve işitme engelli kullanıcılar için hukuk danışmanlığı",
+    assistiveTech: ["Braille ekran", "Ekran okuyucu"],
+    communicationPreference: "İşaret dili ve sesli aramalar",
+    visualSupport: true,
+    hearingSupport: true,
+    communicationSupport: true,
+  },
+  {
+    userEmail: "ayse@engelsizforum.org",
+    disabilityFocus: "Rehabilitasyon ve fiziksel destek",
+    assistiveTech: ["Motor destek egzersiz cihazları"],
+    communicationPreference: "Video görüşme",
+    mobilitySupport: true,
+    hearingSupport: true,
+  },
+  {
+    userEmail: "zeynep@engelsizforum.org",
+    disabilityFocus: "Görme engelli öğrenciler",
+    assistiveTech: ["Sesli kitaplık", "Braille yazıcı"],
+    communicationPreference: "Metin tabanlı mesajlar",
+    visualSupport: true,
+    cognitiveSupport: true,
+  },
+  {
+    userEmail: "burak@engelsizforum.org",
+    disabilityFocus: "Teknoloji ve nöroçeşitlilik",
+    assistiveTech: ["Ekran büyütücü", "Düşük kontrast mod"],
+    communicationPreference: "Asenkron mesajlaşma",
+    cognitiveSupport: true,
+    visualSupport: true,
+  },
+  {
+    userEmail: "elif@engelsizforum.org",
+    disabilityFocus: "Aile destekleri ve iletişim erişilebilirliği",
+    assistiveTech: ["Canlı altyazı", "İşaret dili avatarı"],
+    communicationPreference: "Telefon ve görüntülü görüşme",
+    communicationSupport: true,
+    hearingSupport: true,
   },
 ]
 

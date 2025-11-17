@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Bell, HeartHandshake, LogIn, LogOut, MessageCircle, Search, User } from "lucide-react"
@@ -16,6 +18,19 @@ interface HeaderProps {
 }
 
 export function Header({ user }: HeaderProps) {
+  const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true)
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+      router.refresh()
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
   const navItems = [
     { href: "/", label: "Ana Sayfa" },
     { href: "/categories", label: "Kategoriler" },
@@ -65,9 +80,15 @@ export function Header({ user }: HeaderProps) {
                     Profil
                   </Link>
                 </Button>
-                <Button variant="default" size="sm" className="bg-slate-900 text-white">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="bg-slate-900 text-white"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
-                  Çıkış
+                  {isLoggingOut ? "Çıkış yapılıyor" : "Çıkış"}
                 </Button>
               </div>
             ) : (

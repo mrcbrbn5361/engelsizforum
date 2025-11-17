@@ -8,7 +8,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   Accessibility,
   ArrowRight,
+  Brain,
   Calendar,
+  Ear,
+  Eye,
   HandHeart,
   HeartHandshake,
   Languages,
@@ -39,6 +42,33 @@ const inclusiveFeatureList = [
     title: "Navigasyon Rehberi",
     description: "Erişilebilir mekan haritaları ve ulaşım kartı yönlendirmeleri.",
     icon: Map,
+  },
+]
+
+const disabilityTracks = [
+  {
+    title: "Görme Engeli Dostu",
+    description: "Ekran okuyucu ipuçları, sesli bildirimler ve yüksek kontrastlı temalar.",
+    icon: Eye,
+    features: ["Anlık metin okuma", "Sesli yönlendirmeler", "Büyütme aracı"],
+  },
+  {
+    title: "İşitme Engeli Destekli",
+    description: "Canlı altyazı, işaret dili avatarları ve titreşim bildirimleri.",
+    icon: Ear,
+    features: ["Otomatik transkript", "Görüntülü tercüman", "Titreşimli uyarı"],
+  },
+  {
+    title: "Nöroçeşitlilik Dostu",
+    description: "Hareket azaltma, odak modları ve görev kartlarıyla sakin deneyim.",
+    icon: Brain,
+    features: ["Geniş satır aralığı", "Odak modu", "Görev özetleri"],
+  },
+  {
+    title: "Motor Destekli Navigasyon",
+    description: "Büyük dokunma alanları, klavye kısayolları ve tek tıklama aksiyonları.",
+    icon: Accessibility,
+    features: ["48px dokunma alanı", "Klavye kısayolları", "Sesli komut rehberi"],
   },
 ]
 
@@ -246,6 +276,55 @@ export default async function Home() {
               </CardHeader>
             </Card>
           ))}
+        </section>
+
+        <section className="space-y-6 rounded-3xl bg-white p-6 shadow-sm" aria-labelledby="engel-dostu-baslik">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-blue-600">Engel Türlerine Özel Modlar</p>
+              <h2 id="engel-dostu-baslik" className="text-2xl font-bold text-slate-900">
+                Her topluluk üyesi için kişiselleştirilmiş rehberler
+              </h2>
+              <p className="text-sm text-slate-500">
+                Görsel, işitsel, bilişsel ve motor destek profilleri tek panelde yönetilir; kayıt sırasında seçtiğiniz tercihleri
+                istediğiniz zaman güncelleyebilirsiniz.
+              </p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link href="/register" className="flex items-center gap-2">
+                Engelsiz profilini oluştur
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {disabilityTracks.map((track) => {
+              const Icon = track.icon
+              return (
+                <Card key={track.title} className="rounded-3xl border border-slate-100 shadow-sm">
+                  <CardHeader className="space-y-2">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-slate-700">
+                      <Icon className="h-4 w-4" />
+                      <span className="text-xs font-semibold uppercase tracking-widest">Uyumlu</span>
+                    </div>
+                    <CardTitle>{track.title}</CardTitle>
+                    <CardDescription>{track.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      {track.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-blue-500" aria-hidden />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
         </section>
 
         <section className="grid gap-8 lg:grid-cols-3">

@@ -8,6 +8,11 @@ export type AccessibilitySettings = {
   reduceMotion: boolean
   fontScale: number
   focusHighlight: boolean
+  colorBlindFriendly: boolean
+  calmTypography: boolean
+  captionedMedia: boolean
+  signLanguageGuide: boolean
+  motorSupport: boolean
 }
 
 const STORAGE_KEY = "engelsizforum-accessibility"
@@ -17,6 +22,11 @@ const defaultSettings: AccessibilitySettings = {
   reduceMotion: false,
   focusHighlight: true,
   fontScale: 1,
+  colorBlindFriendly: false,
+  calmTypography: false,
+  captionedMedia: false,
+  signLanguageGuide: false,
+  motorSupport: false,
 }
 
 const applyToDocument = (settings: AccessibilitySettings) => {
@@ -26,6 +36,11 @@ const applyToDocument = (settings: AccessibilitySettings) => {
   root.dataset.dyslexic = settings.dyslexiaFont ? "true" : "false"
   root.dataset.reduceMotion = settings.reduceMotion ? "true" : "false"
   root.dataset.focusHighlight = settings.focusHighlight ? "true" : "false"
+  root.dataset.colorBlindFriendly = settings.colorBlindFriendly ? "true" : "false"
+  root.dataset.calmTypography = settings.calmTypography ? "true" : "false"
+  root.dataset.captionedMedia = settings.captionedMedia ? "true" : "false"
+  root.dataset.signLanguage = settings.signLanguageGuide ? "true" : "false"
+  root.dataset.motorSupport = settings.motorSupport ? "true" : "false"
   root.style.setProperty("--accessibility-font-scale", settings.fontScale.toString())
 }
 

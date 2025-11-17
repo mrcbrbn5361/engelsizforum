@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, User, Phone, Accessibility, Headphones, Brain, Languages } from "lucide-react"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -17,20 +19,38 @@ export default function RegisterPage() {
     username: "",
     phone: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    disabilityFocus: "",
+    assistiveTech: "",
+    communicationPreference: "",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [supportAreas, setSupportAreas] = useState<string[]>([])
   const router = useRouter()
+
+  const supportOptions = [
+    { value: "visual", label: "Görsel Destek", icon: Eye },
+    { value: "hearing", label: "İşitsel Destek", icon: Headphones },
+    { value: "cognitive", label: "Bilişsel Destek", icon: Brain },
+    { value: "mobility", label: "Motor Destek", icon: Accessibility },
+    { value: "communication", label: "İletişim Desteği", icon: Languages },
+  ]
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
+  }
+
+  const handleSupportChange = (value: string) => {
+    setSupportAreas(prev =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+    )
   }
 
   const validateForm = () => {
@@ -62,6 +82,10 @@ export default function RegisterPage() {
       setError("Şifreler eşleşmiyor")
       return false
     }
+    if (supportAreas.length === 0) {
+      setError("En az bir destek alanı seçmelisiniz")
+      return false
+    }
     return true
   }
 
@@ -77,19 +101,26 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      // TODO: Implement actual registration logic
-      // For now, just simulate a successful registration
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      console.log("Registration attempt:", formData)
-      
-      // Simulate successful registration
-      setSuccess("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...")
-      
-      setTimeout(() => {
-        router.push("/login")
-      }, 2000)
-      
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          ...formData,
+          supportAreas,
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.message ?? "Kayıt başarısız")
+        return
+      }
+
+      setSuccess("Kayıt başarılı! Engelsiz deneyim paneliniz hazır.")
+      router.push("/")
+      router.refresh()
+
     } catch (err) {
       setError("Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.")
     } finally {
@@ -266,6 +297,85 @@ export default function RegisterPage() {
                   </a>{" "}
                   nı okudum, kabul ediyorum.
                 </label>
+              </div>
+
+              <div className="space-y-4 rounded-2xl border p-4">
+                <div>
+                  <p className="font-medium">Erişilebilirlik Profili</p>
+                  <p className="text-sm text-gray-500">
+                    Destek alanlarını seçerek forumun size özel öneriler sunmasını sağlayın.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {supportOptions.map((option) => {
+                    const Icon = option.icon
+                    return (
+                      <label
+                        key={option.value}
+                        className="flex cursor-pointer items-center gap-3 rounded-xl border p-3"
+                      >
+                        <Checkbox
+                          checked={supportAreas.includes(option.value)}
+                          onCheckedChange={() => handleSupportChange(option.value)}
+                        />
+                        <div>
+                          <div className="flex items-center gap-2 font-medium">
+                            <Icon className="h-4 w-4" />
+                            {option.label}
+                          </div>
+                          <p className="text-xs text-gray-500">Önerilen araçları kişiselleştirir</p>
+                        </div>
+                      </label>
+                    )
+                  })}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="disabilityFocus">Engel/odak alanınız</Label>
+                  <Input
+                    id="disabilityFocus"
+                    name="disabilityFocus"
+                    placeholder="Örn. işitme kaybı, otizm, görme kaybı"
+                    value={formData.disabilityFocus}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="assistiveTech">Kullandığınız yardımcı teknolojiler</Label>
+                  <Textarea
+                    id="assistiveTech"
+                    name="assistiveTech"
+                    placeholder="Braille ekran, sesli komut, göz izleme vb."
+                    value={formData.assistiveTech}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        assistiveTech: e.target.value,
+                      }))
+                    }
+                    rows={3}
+                  />
+                  <p className="text-xs text-gray-500">Virgülle ayrılarak kaydedilir.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="communicationPreference">İletişim tercihiniz</Label>
+                  <Textarea
+                    id="communicationPreference"
+                    name="communicationPreference"
+                    placeholder="Örn. işaret dili, yazılı sohbet, telefon"
+                    value={formData.communicationPreference}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        communicationPreference: e.target.value,
+                      }))
+                    }
+                    rows={2}
+                  />
+                </div>
               </div>
 
               <Button

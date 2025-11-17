@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AccessibilityPanel } from "@/components/layout/AccessibilityPanel";
+import { AssistiveHUD } from "@/components/layout/AssistiveHUD";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,24 +43,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentUser = await getCurrentUser();
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${hyperlegible.variable} antialiased bg-background text-foreground`}
       >
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header user={currentUser} />
           <main className="flex-1">
             {children}
           </main>
           <Footer />
         </div>
         <AccessibilityPanel />
+        <AssistiveHUD />
         <Toaster />
       </body>
     </html>

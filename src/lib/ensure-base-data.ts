@@ -1,5 +1,7 @@
 import { db } from "@/lib/db"
+import { hashPassword } from "@/lib/auth/password"
 import {
+  baseAccessibilityProfiles,
   baseAccessibilityResources,
   baseCategories,
   basePosts,
@@ -9,12 +11,13 @@ import {
 
 async function seedBaseData() {
   await db.$transaction(async (tx) => {
-    const [categoryCount, userCount, threadCount, postCount, resourceCount] = await Promise.all([
+    const [categoryCount, userCount, threadCount, postCount, resourceCount, profileCount] = await Promise.all([
       tx.category.count(),
       tx.user.count(),
       tx.thread.count(),
       tx.post.count(),
       tx.accessibilityResource.count(),
+      tx.accessibilityProfile.count(),
     ])
 
     if (categoryCount === 0) {
@@ -28,12 +31,50 @@ async function seedBaseData() {
     }
 
     if (userCount === 0) {
+      const hashedUsers = await Promise.all(
+        baseUsers.map(async (user) => ({
+          name: user.name,
+          email: user.email,
+          username: user.username,
+          avatar: user.avatar,
+          bio: user.bio,
+          role: user.role,
+          hashedPassword: await hashPassword(user.password),
+        }))
+      )
+
       await tx.user.createMany({
-        data: baseUsers.map((user) => ({
-          ...user,
-        })),
+        data: hashedUsers,
         skipDuplicates: true,
       })
+    }
+
+    if (profileCount === 0) {
+      const users = await tx.user.findMany({ select: { id: true, email: true } })
+      const userMap = new Map(users.map((user) => [user.email, user.id]))
+
+      const profileData = baseAccessibilityProfiles
+        .map((profile) => {
+          const userId = userMap.get(profile.userEmail)
+          if (!userId) return null
+
+          return {
+            userId,
+            disabilityFocus: profile.disabilityFocus,
+            assistiveTech: profile.assistiveTech,
+            communicationPreference: profile.communicationPreference,
+            visualSupport: profile.visualSupport ?? false,
+            hearingSupport: profile.hearingSupport ?? false,
+            cognitiveSupport: profile.cognitiveSupport ?? false,
+            mobilitySupport: profile.mobilitySupport ?? false,
+            communicationSupport: profile.communicationSupport ?? false,
+          }
+        })
+        .filter((profile): profile is NonNullable<typeof profile> => Boolean(profile))
+
+      if (profileData.length > 0) {
+        await tx.accessibilityProfile.createMany({ data: profileData, skipDuplicates: true })
+      }
     }
 
     if (threadCount === 0) {
